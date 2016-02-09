@@ -70,6 +70,6 @@ object TellJoke extends App {
   println(r3)
 
   val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
-  println("System Terminated " + t)
+  println(t)
 
 }

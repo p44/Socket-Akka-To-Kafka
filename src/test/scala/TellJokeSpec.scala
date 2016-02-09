@@ -20,7 +20,7 @@ class TellJokeSpec(_system: ActorSystem)
 
   override def afterAll: Unit = {
     val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
-    println("System Terminated " + t)
+    println(t)
   }
 
   "A KnockKnockJokeParticipant" should "reset feeling state" in {
