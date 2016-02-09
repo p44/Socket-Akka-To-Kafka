@@ -1,40 +1,53 @@
-import akka.actor.{ ActorRef, ActorSystem, Props, Actor, Inbox }
+/**
+ * Mark C Wilson, Inc.
+ * Apache 2 License
+ */
+
+import akka.actor._
+import scala.concurrent.Await
 import scala.concurrent.duration._
 
 case object ResetFeeling
+
 case object HowAreYouFeeling
+
 case object KnockKnock
+
 case class KnockKnockWho(s: String)
+
 case class KnockKnockPunchLine(s: String)
 
 /**
- *
+ * Simple Actor to verify Akka system
  */
 class KnockKnockJokeParticipant extends Actor {
-	
+
   val happy: String = "happy"
-  val annoyed: String  = "annoyed"
+  val annoyed: String = "annoyed"
   var feeling = happy
 
   def receive = {
-	case ResetFeeling => feeling = happy
-	case HowAreYouFeeling => sender ! feeling
+    case ResetFeeling => feeling = happy
+    case HowAreYouFeeling => sender ! feeling
     case KnockKnock => {
-	  sender ! "Who's There?"
-	}
-	case KnockKnockWho(s) => sender ! s"$s who?"
-	case KnockKnockPunchLine(s) => { 
-		println("...groan...")
-		feeling = annoyed
-		sender ! "That was bad." 
-	}
+      sender ! "Who's There?"
+    }
+    case KnockKnockWho(s) => sender ! s"$s who?"
+    case KnockKnockPunchLine(s) => {
+      println("...groan...")
+      feeling = annoyed
+      sender ! "That was bad."
+    }
   }
 }
 
 /**
- * Tests basic Akka functionality litmus for build
+ * Simple app to verify Akka system
  */
 object TellJoke extends App {
+
+  val timeoutActor = 4.seconds
+  val timeoutShutdown = 11.seconds
 
   val system = ActorSystem("knockknock")
   val victim = system.actorOf(Props[KnockKnockJokeParticipant], "victim")
@@ -42,21 +55,21 @@ object TellJoke extends App {
 
   println("Knock Knock!")
   joker.send(victim, KnockKnock)
-  val r1 = joker.receive(4.seconds)
+  val r1 = joker.receive(timeoutActor)
   println(r1)
 
   println("Orange.")
   joker.send(victim, KnockKnockWho(s"Orange"))
-  val r2 = joker.receive(4.seconds)
+  val r2 = joker.receive(timeoutActor)
   println(r2)
 
   val pl = "Orange you glad I told this joke?"
   println(pl)
   joker.send(victim, KnockKnockPunchLine(pl))
-  val r3 = joker.receive(4.seconds)
+  val r3 = joker.receive(timeoutActor)
   println(r3)
-  
-  system.shutdown()
-  system.awaitTermination(11.seconds)
-  
+
+  val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
+  println("System Terminated " + t)
+
 }

@@ -1,6 +1,7 @@
-import org.scalatest.{ BeforeAndAfterAll, FlatSpecLike, Matchers }
-import akka.actor.{ Actor, Props, ActorSystem }
-import akka.testkit.{ ImplicitSender, TestKit, TestActorRef }
+import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
+import akka.actor.{Terminated, Actor, Props, ActorSystem}
+import akka.testkit.{ImplicitSender, TestKit, TestActorRef}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 
 /**
@@ -13,11 +14,13 @@ class TellJokeSpec(_system: ActorSystem)
   with FlatSpecLike
   with BeforeAndAfterAll {
 
+  val timeoutShutdown = 11.seconds
+
   def this() = this(ActorSystem("knockknock"))
 
   override def afterAll: Unit = {
-    system.shutdown()
-    system.awaitTermination(11.seconds)
+    val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
+    println("System Terminated " + t)
   }
 
   "A KnockKnockJokeParticipant" should "reset feeling state" in {
@@ -25,7 +28,7 @@ class TellJokeSpec(_system: ActorSystem)
     victim ! ResetFeeling
     victim.underlyingActor.asInstanceOf[KnockKnockJokeParticipant].feeling should be("happy")
     victim ! HowAreYouFeeling
-    val x = expectMsgType[String] 
+    val x = expectMsgType[String]
     x should be("happy")
   }
 
@@ -34,25 +37,25 @@ class TellJokeSpec(_system: ActorSystem)
 
     println("Knock Knock!")
     victim ! KnockKnock
-    val r1 = expectMsgType[String] 
-	println(r1)
+    val r1 = expectMsgType[String]
+    println(r1)
     r1 should be("Who's There?")
 
-	println("Orange")
-	victim ! KnockKnockWho(s"Orange")
-	val r2 = expectMsgType[String] 
-	println(r2)
-	r2 should be("Orange who?")
-	
-	val pl = "Orange you glad I told this joke?"
-	println(pl)
-	victim ! KnockKnockPunchLine(pl)
-	val r3 = expectMsgType[String] 
-	println(r3)
-	r3 should be("That was bad.")
+    println("Orange")
+    victim ! KnockKnockWho(s"Orange")
+    val r2 = expectMsgType[String]
+    println(r2)
+    r2 should be("Orange who?")
+
+    val pl = "Orange you glad I told this joke?"
+    println(pl)
+    victim ! KnockKnockPunchLine(pl)
+    val r3 = expectMsgType[String]
+    println(r3)
+    r3 should be("That was bad.")
 
     victim.underlyingActor.asInstanceOf[KnockKnockJokeParticipant].feeling should be("annoyed")
-	
+
   }
 
 }
