@@ -58,4 +58,12 @@ class TellJokeSpec(_system: ActorSystem)
 
   }
 
+  "TellJoke" should "knockKnock" in {
+    println()
+    println("From the object...")
+    println()
+    TellJoke.knockKnock()
+    true should be(true)
+  }
+
 }
