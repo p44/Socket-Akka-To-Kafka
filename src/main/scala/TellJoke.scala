@@ -44,32 +44,35 @@ class KnockKnockJokeParticipant extends Actor {
 /**
  * Simple app to verify Akka system
  */
-object TellJoke extends App {
+object TellJoke {
 
-  val timeoutActor = 4.seconds
-  val timeoutShutdown = 11.seconds
+  def knockKnock(): Unit = {
 
-  val system = ActorSystem("knockknock")
-  val victim = system.actorOf(Props[KnockKnockJokeParticipant], "victim")
-  val joker = Inbox.create(system)
+    val timeoutActor = 4.seconds
+    val timeoutShutdown = 11.seconds
 
-  println("Knock Knock!")
-  joker.send(victim, KnockKnock)
-  val r1 = joker.receive(timeoutActor)
-  println(r1)
+    val system = ActorSystem("knockknock")
+    val victim = system.actorOf(Props[KnockKnockJokeParticipant], "victim")
+    val joker = Inbox.create(system)
 
-  println("Orange.")
-  joker.send(victim, KnockKnockWho(s"Orange"))
-  val r2 = joker.receive(timeoutActor)
-  println(r2)
+    println("Knock Knock!")
+    joker.send(victim, KnockKnock)
+    val r1 = joker.receive(timeoutActor)
+    println(r1)
 
-  val pl = "Orange you glad I told this joke?"
-  println(pl)
-  joker.send(victim, KnockKnockPunchLine(pl))
-  val r3 = joker.receive(timeoutActor)
-  println(r3)
+    println("Orange.")
+    joker.send(victim, KnockKnockWho(s"Orange"))
+    val r2 = joker.receive(timeoutActor)
+    println(r2)
 
-  val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
-  println(t)
+    val pl = "Orange you glad I told this joke?"
+    println(pl)
+    joker.send(victim, KnockKnockPunchLine(pl))
+    val r3 = joker.receive(timeoutActor)
+    println(r3)
 
+    val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
+    println(t)
+
+  }
 }
