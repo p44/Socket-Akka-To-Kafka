@@ -16,7 +16,7 @@ class TellJokeSpec(_system: ActorSystem)
 
   val timeoutShutdown = 11.seconds
 
-  def this() = this(ActorSystem("knockknock"))
+  def this() = this(ActorSystem("knock-knock-test"))
 
   override def afterAll: Unit = {
     val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
@@ -62,7 +62,7 @@ class TellJokeSpec(_system: ActorSystem)
     println()
     println("From the object...")
     println()
-    TellJoke.knockKnock()
+    TellJoke.knockKnock(system)
     true should be(true)
   }
 

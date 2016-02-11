@@ -46,12 +46,11 @@ class KnockKnockJokeParticipant extends Actor {
  */
 object TellJoke {
 
-  def knockKnock(): Unit = {
+  def knockKnock(system: ActorSystem): Unit = {
 
     val timeoutActor = 4.seconds
     val timeoutShutdown = 11.seconds
 
-    val system = ActorSystem("knockknock")
     val victim = system.actorOf(Props[KnockKnockJokeParticipant], "victim")
     val joker = Inbox.create(system)
 
@@ -71,8 +70,9 @@ object TellJoke {
     val r3 = joker.receive(timeoutActor)
     println(r3)
 
-    val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
-    println(t)
+    // Caller is responsible to terminate the sytem
+    //val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
+    //println(t)
 
   }
 }
