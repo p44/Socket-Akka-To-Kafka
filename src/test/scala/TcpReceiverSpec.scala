@@ -24,7 +24,7 @@ class TcpReceiverSpec(_system: ActorSystem)
     println(t)
   }
 
-  "A TcpReceiver" should "construct wtih host port" in {
+  "A TcpReceiver" should "construct with host port" in {
     val victim = TestActorRef(Props[KnockKnockJokeParticipant])
     val receiverActor = TestActorRef(Props(new TcpBoundReceiver(Models.host, Models.port)))
     receiverActor.underlyingActor.asInstanceOf[TcpBoundReceiver].host should be(Models.host)
