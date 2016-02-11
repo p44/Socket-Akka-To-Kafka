@@ -28,7 +28,7 @@ object MainX extends App {
     //TellJoke.knockKnock(system)
 
     // TCP bind receiver
-    TcpReceiver.listen(system, Models.host, Models.port)
+    TcpReceiver.listen(system, Models.RECEIVER_HOST, Models.RECEIVER_PORT)
     println("*** Start TCP Listening ***")
 
     // TODO UDP bind receiver
