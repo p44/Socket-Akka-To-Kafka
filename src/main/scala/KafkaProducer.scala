@@ -18,6 +18,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
  * Some hard coded stuff for now - can move to props when used for real
  *
+ * From Models:
+ *
  * kafka "localhost:9092"
  * zookeeper "localhost:2181"
  * topic "socket-akka-to-kafka"
@@ -25,16 +27,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
  */
 object KafkaProducer {
 
-  val KAFKA_METADATA_BROKER_LIST = "localhost:9092"
-  val KAFKA_ZOOKEEPER_CONN = "localhost:2181"
-  val KAFKA_TOPIC_NAME = "socket-akka-to-kafka"
-
   // Our producer with default props
   val PRODUCER = initProducer(defaultProps)
 
   def defaultProps: Properties = {
     val p = new Properties()
-    p.put("metadata.broker.list", KAFKA_METADATA_BROKER_LIST)
+    p.put("metadata.broker.list", Models.KAFKA_METADATA_BROKER_LIST)
     p.put("request.required.acks", "1")
     p.put("request.timeout.ms", "1000")
     p.put("producer.type", "sync")
