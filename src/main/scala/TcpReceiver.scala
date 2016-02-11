@@ -24,7 +24,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
  */
 class TcpDataHandler extends Actor with ActorLogging {
 
-  val kafkaTopic = KafkaProducer.KAFKA_TOPIC_NAME
+  val kafkaTopic = Models.KAFKA_TOPIC_NAME
   val kafkaProducer = KafkaProducer.PRODUCER
 
   def receive = {
