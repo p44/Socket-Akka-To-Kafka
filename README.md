@@ -39,6 +39,8 @@ View the topic
 
 Run the app from sbt by using 'run'
 
+![Architecture](./about/sbt-run.png)
+
 The Akka socket listeners should be running.
 
 From a command line send a message with netcat, e.g.
