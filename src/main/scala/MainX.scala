@@ -13,14 +13,13 @@ import scala.concurrent.duration._
 
 /**
  * Main App
- * Starts socket listeners for only 2 minutes then terminates the akka system
+ * Starts socket listeners which produces to kafka a string from bytes to char
+ * Listens indefinitely until killed.  Terminates the akka system on kill
  *
  */
 object MainX extends App {
 
   val system = ActorSystem("socket-listening-hero")
-  val twoMin = 120000L
-  val listenTimeMillis = twoMin
   val timeoutShutdown = 11.seconds
 
   try {
@@ -31,24 +30,18 @@ object MainX extends App {
     TcpReceiver.listen(system, Models.RECEIVER_HOST, Models.RECEIVER_PORT)
     println("*** Start TCP Listening ***")
 
-    // TODO UDP bind receiver
-    //println("TODO UDP receiver")
-
-    // Sleep for a bit - the actor is started, bound to the port and receiving
-    val secs = (listenTimeMillis/1000L).toLong
-    println(s"TcpReceiverApp Listening for ${secs} seconds.... ")
-    Thread.sleep(listenTimeMillis)
-
-    println("*** End Listening ***")
   } catch {
     case e: Exception => {
       println("Something unexpected happened.")
       e.printStackTrace()
     }
   } finally {
-    println("Terminating")
-    val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
-    println(t)
+    sys.addShutdownHook {
+      println("*** End TCP Listening ***")
+      println("Terminating Akka System")
+      val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
+      println(t)
+    }
   }
 
 }
