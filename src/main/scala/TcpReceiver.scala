@@ -22,14 +22,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
  *
  * Bytes to String, sends to Kafka
  */
-class TcpDataHandler extends Actor with ActorLogging {
+class TcpDataHandler(remote: InetSocketAddress) extends Actor with ActorLogging {
 
   val kafkaTopic = Models.KAFKA_TOPIC_NAME
   val kafkaProducer = KafkaProducer.PRODUCER
+  val remoteAddress = remote.getAddress.getHostAddress
 
   def receive = {
     case Tcp.Received(data) => {
-      if (log.isDebugEnabled) log.debug("handler received raw: " + data)
+      if (log.isDebugEnabled) log.debug(s"handler from ${remoteAddress} received raw: ${data} ")
 
       // do something with the data (turn it into a string)
       val ba = data.toArray
@@ -94,7 +95,7 @@ class TcpBoundReceiver(h: String, p: Int) extends Actor with ActorLogging {
       val connection = sender()
       try {
         if (log.isDebugEnabled) log.debug(s"Tcp.Connected local ${local}, remote ${remote}")
-        val handler = context.actorOf(Props[TcpDataHandler])
+        val handler = context.actorOf(Props(new TcpDataHandler(remote)))
         if (log.isDebugEnabled) log.debug("Sending Tcp.Register to handler")
         connection ! Tcp.Register(handler)
       } finally {
