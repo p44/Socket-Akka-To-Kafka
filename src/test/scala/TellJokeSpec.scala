@@ -26,10 +26,10 @@ class TellJokeSpec(_system: ActorSystem)
   "A KnockKnockJokeParticipant" should "reset feeling state" in {
     val victim = TestActorRef(Props[KnockKnockJokeParticipant])
     victim ! ResetFeeling
-    victim.underlyingActor.asInstanceOf[KnockKnockJokeParticipant].feeling should be("happy")
+    assert(victim.underlyingActor.asInstanceOf[KnockKnockJokeParticipant].feeling == "happy")
     victim ! HowAreYouFeeling
     val x = expectMsgType[String]
-    x should be("happy")
+    assert(x == "happy")
   }
 
   "A KnockKnockJokeParticipant" should "play along with a knock knock joke" in {
@@ -39,22 +39,22 @@ class TellJokeSpec(_system: ActorSystem)
     victim ! KnockKnock
     val r1 = expectMsgType[String]
     println(r1)
-    r1 should be("Who's There?")
+    assert(r1 == "Who's There?")
 
     println("Orange")
     victim ! KnockKnockWho(s"Orange")
     val r2 = expectMsgType[String]
     println(r2)
-    r2 should be("Orange who?")
+    assert(r2 == "Orange who?")
 
     val pl = "Orange you glad I told this joke?"
     println(pl)
     victim ! KnockKnockPunchLine(pl)
     val r3 = expectMsgType[String]
     println(r3)
-    r3 should be("That was bad.")
+    assert(r3 == "That was bad.")
 
-    victim.underlyingActor.asInstanceOf[KnockKnockJokeParticipant].feeling should be("annoyed")
+    assert(victim.underlyingActor.asInstanceOf[KnockKnockJokeParticipant].feeling == "annoyed")
 
   }
 
@@ -63,7 +63,6 @@ class TellJokeSpec(_system: ActorSystem)
     println("From the object...")
     println()
     TellJoke.knockKnock(system)
-    true should be(true)
   }
 
 }

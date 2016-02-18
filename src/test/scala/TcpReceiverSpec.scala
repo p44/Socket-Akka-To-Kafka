@@ -26,11 +26,11 @@ class TcpReceiverSpec(_system: ActorSystem)
 
   "A TcpReceiver" should "construct with host port" in {
     val victim = TestActorRef(Props[KnockKnockJokeParticipant])
-    val receiverActor = TestActorRef(Props(new TcpBoundReceiver(Models.host, Models.port)))
-    receiverActor.underlyingActor.asInstanceOf[TcpBoundReceiver].host should be(Models.host)
-    receiverActor.underlyingActor.asInstanceOf[TcpBoundReceiver].port should be(Models.port)
+    val receiverActor = TestActorRef(Props(new TcpBoundReceiver(Models.RECEIVER_HOST, Models.RECEIVER_PORT)))
+    assert(receiverActor.underlyingActor.asInstanceOf[TcpBoundReceiver].host == Models.RECEIVER_HOST)
+    assert(receiverActor.underlyingActor.asInstanceOf[TcpBoundReceiver].port == Models.RECEIVER_PORT)
     println(s"TEST TcpReceiver Actor path:  ${receiverActor.path}")
-    receiverActor.path.toString.contains(testSystemName) === true
+    assert(receiverActor.path.toString.contains(testSystemName))
   }
 
 
