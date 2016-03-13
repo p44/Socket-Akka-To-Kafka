@@ -17,6 +17,12 @@
 
 /**
  * Created by markwilson on 2/11/16.
+ *
+ * Hard coded:
+ * RECEIVER_HOST = "localhost"
+ * RECEIVER_PORT = 11111
+ * KAFKA_METADATA_BROKER_LIST = "localhost:9092"
+ * KAFKA_TOPIC_NAME = "socket-akka-to-kafka"
  */
 object Models {
 

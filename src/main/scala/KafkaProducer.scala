@@ -27,13 +27,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * http://kafka.apache.org/documentation.html#producerapi
- * Some hard coded stuff for now - can move to props when used for real
- *
- * From Models:
- *
- * kafka "localhost:9092"
- * zookeeper "localhost:2181"
- * topic "socket-akka-to-kafka"
+ * The default props are build using Models.KAFKA_METADATA_BROKER_LIST
  *
  */
 object KafkaProducer {

@@ -16,7 +16,6 @@
 */
 
 import akka.actor._
-import scala.concurrent.Await
 import scala.concurrent.duration._
 
 case object ResetFeeling
@@ -83,8 +82,6 @@ object TellJoke {
     println(r3)
 
     // Caller is responsible to terminate the sytem
-    //val t: Terminated = Await.result(system.terminate(), timeoutShutdown)
-    //println(t)
 
   }
 }

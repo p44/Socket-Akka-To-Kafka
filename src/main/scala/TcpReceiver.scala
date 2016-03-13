@@ -20,11 +20,7 @@ import akka.actor._
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import akka.io.{ IO, Tcp}
-import akka.util.ByteString
 import java.net.InetSocketAddress
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * Handle ByteStrings (do some work on the data received) fed from a TCP receiver
